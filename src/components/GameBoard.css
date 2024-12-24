@@ -55,9 +55,21 @@ right: 70px;
 }
 
 .goal {
-top: 40px;
+top: 57px;
 text-align: center;
 align-content: center;
 position: fixed;
 
 }
+
+@font-face {
+  font-family: 'PlaywriteCL';
+  src: url('../fonts/PlaywriteCL-Regular.ttf') format('truetype'); /* Correct path */
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'PlaywriteCL', sans-serif;
+}
+

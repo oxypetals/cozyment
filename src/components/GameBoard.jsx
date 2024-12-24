@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ElementList from "./ElementList";
 import LivesDisplay from "./LivesDisplay";
 import recipes from "../gameLogic/recipes";
@@ -15,6 +15,43 @@ const GameBoard = ({ lives, loseLife }) => {
   const [elementImages, setElementImages] = useState({});
   
   const currentGoal = goals[currentGoalIndex];
+
+  const triggerConfetti = useCallback(() => {
+    setShowConfetti(true);
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 3000);
+  }, []);
+
+  const combineElements = useCallback(() => {
+  const [element1, element2] = selectedElements;
+  const recipe = recipes.find(
+    (r) =>
+      JSON.stringify(r.inputs.sort()) ===
+      JSON.stringify([element1, element2].sort())
+  );
+
+  if (recipe) {
+    if (!inventory.includes(recipe.output)) {
+      setInventory(prev => [...prev, recipe.output]);
+      setResult(recipe.output);
+      if (currentGoal && recipe.output === currentGoal.name.toLowerCase()) {
+        alert(`Goal completed: ${currentGoal.name}`);
+        setCurrentGoalIndex(prev => prev + 1);
+        setShowHint(false);
+      }
+      triggerConfetti();
+    } else {
+      setResult(recipe.output);
+    }
+  } else {
+    console.log("Invalid combination, losing life");
+    loseLife(); // Ensure that this is only called once
+    setResult(null);
+  }
+
+  setSelectedElements([]); // Reset selected elements after combination
+}, [selectedElements, inventory, currentGoal, loseLife, triggerConfetti]);
 
   useEffect(() => {
     const loadElementImages = async () => {
@@ -43,59 +80,22 @@ const GameBoard = ({ lives, loseLife }) => {
     if (selectedElements.length === 2) {
       const timer = setTimeout(() => {
         combineElements();
-      }, 500); // Small delay to show both elements before combination
+      }, 500);
       return () => clearTimeout(timer);
     }
-  }, [selectedElements]);
-
-  const combineElements = () => {
-    const [element1, element2] = selectedElements;
-    const recipe = recipes.find(
-      (r) =>
-        JSON.stringify(r.inputs.sort()) ===
-        JSON.stringify([element1, element2].sort())
-    );
-
-    if (recipe) {
-      if (!inventory.includes(recipe.output)) {
-        setInventory([...inventory, recipe.output]);
-        setResult(recipe.output);
-        if (currentGoal && recipe.output === currentGoal.name.toLowerCase()) {
-          alert(`Goal completed: ${currentGoal.name}`);
-          setCurrentGoalIndex((prevIndex) => prevIndex + 1);
-          setShowHint(false);
-        }
-        triggerConfetti();
-      } else {
-        setResult(recipe.output);
-      }
-    } else {
-      loseLife();
-      setResult(null);
-    }
-  };
+  }, [selectedElements, combineElements]);
 
   const handleSelect = (element) => {
     if (selectedElements.length === 2) {
-      // If we already have 2 elements, start fresh with the new selection
       setSelectedElements([element]);
       setResult(null);
     } else if (selectedElements.includes(element)) {
-      // If element is already selected, remove it
-      setSelectedElements((prev) =>
-        prev.filter((selected) => selected !== element)
+      setSelectedElements(prev =>
+        prev.filter(selected => selected !== element)
       );
     } else {
-      // Add the new element to selections
-      setSelectedElements((prev) => [...prev, element]);
+      setSelectedElements(prev => [...prev, element]);
     }
-  };
-
-  const triggerConfetti = () => {
-    setShowConfetti(true);
-    setTimeout(() => {
-      setShowConfetti(false);
-    }, 3000);
   };
 
   if (currentGoalIndex >= goals.length) {
