@@ -4,6 +4,7 @@ const goals = [
   { level: 1, name: "Flower", inputs: ["rain", "plant"] },
   { level: 1, name: "Tree", inputs: ["plant", "water"] },
   { level: 1, name: "Glass", inputs: ["sand", "fire"] },
+  { level: 1, name: "Bottle", inputs: ["glass", "water"] },
   { level: 1, name: "Brick", inputs: ["clay", "fire"] },
   { level: 1, name: "Lightning", inputs: ["thunderstorm", "fire"] },
   { level: 1, name: "Perfume", inputs: ["fragrance", "water"] },

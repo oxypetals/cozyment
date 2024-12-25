@@ -1,4 +1,5 @@
 import React from 'react';
+import "./GoalSection.css";
 
 const GoalsSection = ({ currentGoal, showHint, setShowHint }) => {
   return (

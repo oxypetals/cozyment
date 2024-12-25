@@ -51,16 +51,15 @@ h2 {
   align-content: center;
   text-align: right;
 position: fixed;
-top: 0;
-right: 70px;
+top: -20px;
+    right: 155px;
 }
 
 .goal {
-top: 57px;
-text-align: center;
-align-content: center;
-position: fixed;
-
+    top: -20px;
+    text-align: center;
+    align-content: center;
+    position: fixed;
 }
 
 @font-face {
@@ -76,11 +75,14 @@ body {
 
 .hint-button {
   width: 290px; /* Set the size of the button */
-  height: 450px; /* Set the size of the button */
+  height: 250px; /* Set the size of the button */
   background-image: url('https://i.imgur.com/0dyEWi3.png');
   background-size: cover; /* Ensures the image covers the entire div */
   background-position: center; /* Centers the image within the div */
   cursor: pointer; /* Changes the cursor to a pointer to indicate it's clickable */
+position: fixed;
+    bottom: 5px;
+left: -50px;
 }
 
 .hint-button:hover {

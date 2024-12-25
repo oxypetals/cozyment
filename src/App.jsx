@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import GameBoard from "./components/GameBoard";
 import GameOver from "./components/GameOver";
+import "./App.css";
 
 const App = () => {
   const [lives, setLives] = useState(["🥛", "🥛", "🥛"]);
@@ -14,7 +15,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1>Cozyment</h1>
+<h1 class="cozy">Cozyment</h1>
       {gameOver ? (
         <GameOver />
       ) : (

@@ -1,0 +1,22 @@
+.lives-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lives-text {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.waterdrop.fade {
+  opacity: 0;
+}
+.waterdrop {
+  display: inline-block;
+  transition: opacity 500ms ease;
+  opacity: 1;
+  width: 85px; /* Adjust size as needed */
+  height: 85px; /* Adjust size as needed */
+  vertical-align: middle;
+}

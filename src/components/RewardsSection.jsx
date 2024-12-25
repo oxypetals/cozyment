@@ -75,7 +75,7 @@ const RewardsSection = ({
       left: 0,
       right: 0,
       bottom: 0,
-      background: '#e1eacdcc',
+      background: '#948b80d6',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',

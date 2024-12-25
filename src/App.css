@@ -38,36 +38,28 @@
 }
 body {
     background: url(https://i.imgur.com/JtJVDjW.png);
+animation: fadeIn 1s ease-out;
 }
 
-@keyframes slideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+h1.cozy {
+margin-top: -20px;
 }
-
+.discovery-count {
+    margin-top: -80px;
+    visibility: hidden;
+}
 @keyframes fadeIn {
-  from { opacity: 0; }
+  from { opacity: 0.1; }
   to { opacity: 1; }
 }
+button.restart-button {
+background: url(https://i.imgur.com/U7vnBU0.png);
+width: 500px;
+height: 500px;
+background-size: cover;
+border: none !important;
+z-index: 700;
+cursor: pointer;
+ animation: fadeIn 1s ease-out; /* Apply the animation */
 
-@keyframes popIn {
-  0% { transform: scale(0); opacity: 0; }
-  60% { transform: scale(1.2); }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.animate-slide-in {
-  animation: slideIn 0.5s ease-out;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out;
-}
-
-.animate-fade-in-delay {
-  animation: fadeIn 0.5s ease-out 0.3s both;
-}
-
-.animate-pop-in {
-  animation: popIn 0.5s ease-out 0.6s both;
 }

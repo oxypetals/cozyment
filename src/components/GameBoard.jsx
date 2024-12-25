@@ -124,7 +124,7 @@ const GameBoard = () => {
           // Optionally close after a set time (3 seconds)
           setTimeout(() => {
             setShowGoalCompletion(false);
-          }, 75000); 
+          }, 6900); 
         }
 
         triggerConfetti();

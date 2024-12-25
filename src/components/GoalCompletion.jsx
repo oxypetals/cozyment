@@ -39,22 +39,6 @@ const GoalCompletion = ({ goalName, onClose }) => {
         className="slideimg"
       />
 
-<button 
-  className="nextbtn" 
-  onClick={onClose} 
-  style={{
-    marginTop: '20px',
-    padding: '10px 20px',
-    fontSize: '16px',
-    backgroundColor: '#4facfe',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-  }}
->
-  Next
-</button>
 
       </div>
     </div>
