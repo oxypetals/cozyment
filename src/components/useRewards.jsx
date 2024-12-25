@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import recipes from "../gameLogic/recipes";
 
 const useRewards = (
@@ -19,7 +19,6 @@ const useRewards = (
           const newLives = lives - 3;
           setLives(newLives);
           if (newLives <= 0) {
-            // Ensure game over is triggered after state update
             setTimeout(() => setIsGameOver(true), 0);
           }
         } else {
@@ -34,7 +33,7 @@ const useRewards = (
         const randomElement = allElements[Math.floor(Math.random() * allElements.length)];
         setInventory(prev => [...prev, randomElement]);
         break;
-     case 'sleep': // Changed from 'revitalize' to 'sleep'
+     case 'sleep':
         setElementFatigue({});
         break;
       case 'powernap':

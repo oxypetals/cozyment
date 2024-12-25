@@ -172,7 +172,7 @@ setPowerNapActive
     }
   };
 
-  if (currentGoalIndex >= goals.length) {
+ if (currentGoalIndex >= goals.length) {
     return <h2>All goals completed! 🎉</h2>;
   }
 
@@ -184,7 +184,14 @@ setPowerNapActive
     <div>
       {showConfetti && <div className="confetti-container" />}
       <LivesDisplay lives={lives} />
-      <FatigueDisplay elementFatigue={elementFatigue} />
+      <FatigueDisplay 
+        elementFatigue={elementFatigue}
+        powerNapActive={powerNapActive}
+      />
+      
+      <div className="discovery-count">
+        Discoveries: {discoveryCount}
+      </div>
       
       <ElementList 
         inventory={inventory} 
@@ -213,21 +220,7 @@ setPowerNapActive
         setShowHint={setShowHint}
       />
     </div>
-
-  );
-
-return (
-    <div>
-      <FatigueDisplay 
-        elementFatigue={elementFatigue}
-        powerNapActive={powerNapActive} // Pass to component
-      />
-      
-      {/* Add discovery count display */}
-      <div className="discovery-count">
-        Discoveries: {discoveryCount}
-      </div>
-    </div>
   );
 };
+
 export default GameBoard;
