@@ -4,38 +4,33 @@ const ElementList = ({ inventory, onSelect }) => {
   const [elementImages, setElementImages] = useState({});
 
   useEffect(() => {
-    const loadImages = async () => {
+    const loadImages = () => {
       const images = {};
-      for (const element of inventory) {
-        try {
-          const imageUrl = `/assets/${element}.png`;
-          const response = await fetch(imageUrl);
-          if (response.ok) {
-            images[element] = imageUrl;
-          }
-        } catch (error) {
-          console.warn(`Error loading image for ${element}:`, error);
-        }
-      }
+      inventory.forEach((element) => {
+        const imageUrl = `/assets/${element}.png`; // Construct the image URL based on element name
+        images[element] = imageUrl; // Directly assign the URL instead of fetching
+      });
       setElementImages(images);
     };
 
-    loadImages();
-  }, [inventory]);
+    loadImages(); // Run when the inventory changes
+  }, [inventory]); // Dependencies on inventory so images reload when inventory changes
 
   return (
     <div className="element-list">
       <h2>Your Elements</h2>
-      <div style={{ 
-        display: "grid",
-        gridTemplateColumns: "repeat(8, 1fr)",
-        gap: "10px",
-        width: "100%",
-        maxWidth: "1200px", // Prevents the grid from becoming too wide
-        margin: "0 auto", // Centers the grid
-        overflowY: "auto", // Allows vertical scrolling if needed
-        padding: "10px",
-      }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(8, 1fr)",
+          gap: "10px",
+          width: "100%",
+          maxWidth: "1200px", // Prevents the grid from becoming too wide
+          margin: "0 auto", // Centers the grid
+          overflowY: "auto", // Allows vertical scrolling if needed
+          padding: "10px",
+        }}
+      >
         {inventory.map((element, index) => (
           <div
             key={index}
@@ -54,10 +49,6 @@ const ElementList = ({ inventory, onSelect }) => {
               alignItems: "center",
               justifyContent: "center",
               transition: "transform 0.2s, box-shadow 0.2s",
-              ":hover": {
-                transform: "scale(1.05)",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
-              }
             }}
           >
             <div
@@ -73,26 +64,34 @@ const ElementList = ({ inventory, onSelect }) => {
                 borderRadius: "4px",
               }}
             >
-              {elementImages[element] && (
+              {elementImages[element] ? (
                 <img
                   src={elementImages[element]}
                   alt={element}
                   style={{
                     width: "100%",
                     height: "100%",
-                    objectFit: "contain"
+                    objectFit: "contain",
                   }}
                   onError={(e) => {
-                    e.target.style.display = 'none';
+                    // Fallback in case image is not found
+                    e.target.style.display = 'none'; // Hide image if it fails to load
                   }}
                 />
+              ) : (
+                <div style={{ width: "100%", height: "100%" }}>
+                  {/* Optional: Show a fallback placeholder here */}
+                  <span>No Image</span>
+                </div>
               )}
             </div>
-            <span style={{
-              fontSize: "0.9rem",
-              wordBreak: "break-word",
-              maxWidth: "100%"
-            }}>
+            <span
+              style={{
+                fontSize: "0.9rem",
+                wordBreak: "break-word",
+                maxWidth: "100%",
+              }}
+            >
               {element}
             </span>
           </div>

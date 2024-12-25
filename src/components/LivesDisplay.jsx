@@ -3,7 +3,7 @@ import React from "react";
 
 const LivesDisplay = ({ lives }) => (
   <div>
-    <h1 class="lives">Lives: {lives.join(" ")}</h1>
+    <h1 className="lives">Lives: {lives}</h1> {/* Directly display the lives number */}
   </div>
 );
 

@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ElementList from "./ElementList";
 import LivesDisplay from "./LivesDisplay";
+import RewardsSection from './RewardsSection';
+import FatigueDisplay from './FatigueDisplay';
+import CombinationArea from './CombinationArea';
+import GoalsSection from './GoalsSection';
+import GameOver from './GameOver';
+import useRewards from './useRewards';
 import recipes from "../gameLogic/recipes";
 import goals from "../gameLogic/goals";
 import "./GameBoard.css";
 
-const GameBoard = ({ lives, loseLife }) => {
+const GameBoard = () => {
+  const [lives, setLives] = useState(3);
   const [inventory, setInventory] = useState(["fire", "water", "earth", "air"]);
   const [selectedElements, setSelectedElements] = useState([]);
   const [result, setResult] = useState(null);
@@ -13,45 +20,114 @@ const GameBoard = ({ lives, loseLife }) => {
   const [currentGoalIndex, setCurrentGoalIndex] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [elementImages, setElementImages] = useState({});
-  
+  const [elementFatigue, setElementFatigue] = useState({});
+  const [discoveryCount, setDiscoveryCount] = useState(0);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [showRewards, setShowRewards] = useState(false);
+  const [powerNapActive, setPowerNapActive] = useState(false); // Add this line
+
   const currentGoal = goals[currentGoalIndex];
+
+  // Define loseLife before it's used in useRewards
+  const loseLife = useCallback(() => {
+    setLives((prevLives) => {
+      const newLives = prevLives - 1;
+      if (newLives <= 0) {
+        setIsGameOver(true);
+      }
+      return newLives;
+    });
+  }, []);
+
+  const { handleReward } = useRewards(
+    inventory,
+    setInventory,
+    setElementFatigue,
+    loseLife,
+    lives,
+    setLives,
+    setIsGameOver,
+    setShowRewards,
+setPowerNapActive 
+  );
+
+  const restartGame = () => {
+    setLives(3);
+    setInventory(["fire", "water", "earth", "air"]);
+    setSelectedElements([]);
+    setResult(null);
+    setShowConfetti(false);
+    setCurrentGoalIndex(0);
+    setElementFatigue({});
+    setDiscoveryCount(0);
+    setShowRewards(false);
+    setIsGameOver(false);
+  };
 
   const triggerConfetti = useCallback(() => {
     setShowConfetti(true);
-    setTimeout(() => {
-      setShowConfetti(false);
-    }, 3000);
+    setTimeout(() => setShowConfetti(false), 3000);
   }, []);
 
+  const updateElementFatigue = useCallback((elements) => {
+    setElementFatigue(prev => {
+      const updated = { ...prev };
+      elements.forEach(element => {
+        updated[element] = (updated[element] || 0) + 1;
+      });
+      return updated;
+    });
+  }, []);
+
+  const canUseElement = useCallback((element) => {
+    return !elementFatigue[element] || elementFatigue[element] < 2;
+  }, [elementFatigue]);
+
   const combineElements = useCallback(() => {
-  const [element1, element2] = selectedElements;
-  const recipe = recipes.find(
-    (r) =>
-      JSON.stringify(r.inputs.sort()) ===
-      JSON.stringify([element1, element2].sort())
-  );
-
-  if (recipe) {
-    if (!inventory.includes(recipe.output)) {
-      setInventory(prev => [...prev, recipe.output]);
-      setResult(recipe.output);
-      if (currentGoal && recipe.output === currentGoal.name.toLowerCase()) {
-        alert(`Goal completed: ${currentGoal.name}`);
-        setCurrentGoalIndex(prev => prev + 1);
-        setShowHint(false);
-      }
-      triggerConfetti();
-    } else {
-      setResult(recipe.output);
+    const [element1, element2] = selectedElements;
+    
+    if (!canUseElement(element1) || !canUseElement(element2)) {
+      alert("One or both elements are fatigued! They can't be used again.");
+      setSelectedElements([]);
+      return;
     }
-  } else {
-    console.log("Invalid combination, losing life");
-    loseLife(); // Ensure that this is only called once
-    setResult(null);
-  }
 
-  setSelectedElements([]); // Reset selected elements after combination
-}, [selectedElements, inventory, currentGoal, loseLife, triggerConfetti]);
+    const recipe = recipes.find(
+      (r) =>
+        JSON.stringify(r.inputs.sort()) ===
+        JSON.stringify([element1, element2].sort())
+    );
+
+    updateElementFatigue([element1, element2]);
+
+    if (recipe) {
+      if (!inventory.includes(recipe.output)) {
+        setInventory((prev) => [...prev, recipe.output]);
+        setResult(recipe.output);
+        setDiscoveryCount((prev) => {
+          const newCount = prev + 1;
+          if (newCount % 4 === 0 && !showRewards) {
+            setShowRewards(true);
+          }
+          return newCount;
+        });
+
+        if (currentGoal && recipe.output === currentGoal.name.toLowerCase()) {
+          alert(`Goal completed: ${currentGoal.name}`);
+          setCurrentGoalIndex(prev => prev + 1);
+          setShowHint(false);
+        }
+        triggerConfetti();
+      } else {
+        setResult(recipe.output);
+      }
+    } else {
+      loseLife();
+      setResult(null);
+    }
+
+    setSelectedElements([]);
+  }, [selectedElements, inventory, currentGoal, loseLife, triggerConfetti, canUseElement, updateElementFatigue, showRewards]);
 
   useEffect(() => {
     const loadElementImages = async () => {
@@ -78,9 +154,7 @@ const GameBoard = ({ lives, loseLife }) => {
 
   useEffect(() => {
     if (selectedElements.length === 2) {
-      const timer = setTimeout(() => {
-        combineElements();
-      }, 500);
+      const timer = setTimeout(combineElements, 500);
       return () => clearTimeout(timer);
     }
   }, [selectedElements, combineElements]);
@@ -102,75 +176,42 @@ const GameBoard = ({ lives, loseLife }) => {
     return <h2>All goals completed! 🎉</h2>;
   }
 
+  if (isGameOver) {
+    return <GameOver restartGame={restartGame} />;
+  }
+
   return (
     <div>
-      {showConfetti && <div className="confetti-container"></div>}
+      {showConfetti && <div className="confetti-container" />}
       <LivesDisplay lives={lives} />
+      <FatigueDisplay elementFatigue={elementFatigue} />
+      
       <ElementList 
         inventory={inventory} 
         onSelect={handleSelect} 
         elementImages={elementImages}
+        elementFatigue={elementFatigue}
       />
-      <div
-        className="combination-area"
-        style={{
-          minHeight: "150px",
-          border: "none",
-          padding: "10px",
-          textAlign: "center",
-          margin: "20px 0",
-        }}
-      >
-        <h3>Selected Elements:</h3>
-        <div className="selected-elements">
-          {selectedElements.map((element, index) => (
-            <span key={index} className="selected-element">
-              {elementImages[element] ? (
-                <img 
-                  src={elementImages[element]} 
-                  alt={element}
-                  className="element-image"
-                  style={{ width: "150px", height: "150px", margin: "0 5px" }}
-                />
-              ) : (
-                element
-              )}
-              {index === 0 && selectedElements.length > 1 && " + "}
-            </span>
-          ))}
-        </div>
-        {result && (
-          <div className="result">
-            <h3>Result:</h3>
-            <p>
-              {elementImages[result] ? (
-                <img 
-                  src={elementImages[result]} 
-                  alt={result}
-                  className="element-image"
-                  style={{ width: "150px", height: "150px" }}
-                />
-              ) : (
-                result
-              )}
-            </p>
-          </div>
-        )}
-      </div>
-      <div className="goals-section">
-        {currentGoal ? (
-          <>
-            <h2 className="goal">Current Goal: {currentGoal.name}</h2>
-            {showHint ? (
-              <p>Combine: {currentGoal.inputs.join(" + ")}</p>
-            ) : (
-              <button onClick={() => setShowHint(true)}>Hint</button>
-            )}
-          </>
-        ) : (
-          <p>No current goal. All goals completed!</p>
-        )}
-      </div>
+      
+      <CombinationArea 
+        selectedElements={selectedElements}
+        elementImages={elementImages}
+        result={result}
+      />
+      
+      {showRewards && (
+        <RewardsSection 
+          isVisible={showRewards} 
+          onRewardSelect={handleReward} 
+          onClose={() => setShowRewards(false)}
+        />
+      )}
+
+      <GoalsSection 
+        currentGoal={currentGoal}
+        showHint={showHint}
+        setShowHint={setShowHint}
+      />
     </div>
   );
 };
