@@ -12,8 +12,6 @@ const useRewards = (
   setShowRewards,
   setPowerNapActive
 ) => {
-  const [smallNapUsed, setSmallNapUsed] = useState(false);
-
   const handleReward = useCallback((rewardType) => {
     switch (rewardType) {
       case 'stabilize':
