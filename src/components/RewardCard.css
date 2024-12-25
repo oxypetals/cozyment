@@ -1,0 +1,3 @@
+.reward-card img:hover {
+  transform: scale(1.1); /* Apply scaling effect on hover */
+}
