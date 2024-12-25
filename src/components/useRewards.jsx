@@ -41,7 +41,6 @@ const useRewards = (
         setPowerNapActive(true);
         break;
       case 'smallnap':
-        setSmallNapUsed(true);
         break;
       case 'fortify':
         break;
