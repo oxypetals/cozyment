@@ -1,12 +1,12 @@
 const goals = [
   // Level 1 Goals (Easiest)
-  { level: 1, name: "Terrarium", inputs: ["glass", "mud"] },
-  { level: 1, name: "Aquarium", inputs: ["pond", "fish"] },
-  { level: 1, name: "Pancake", inputs: ["egg", "flour"] },
-  { level: 1, name: "Hot Chocolate", inputs: ["chocolate milk", "heat"] },
-  { level: 1, name: "Sandwich", inputs: ["bread", "cheese"] },
-  { level: 1, name: "Grilled Cheese", inputs: ["bread", "butter"] },
+  { level: 1, name: "Rain", inputs: ["water", "rain"] },
   { level: 1, name: "Flower", inputs: ["rain", "plant"] },
+  { level: 1, name: "Tree", inputs: ["plant", "water"] },
+  { level: 1, name: "Glass", inputs: ["sand", "fire"] },
+  { level: 1, name: "Brick", inputs: ["clay", "fire"] },
+  { level: 1, name: "Lightning", inputs: ["thunderstorm", "fire"] },
+  { level: 1, name: "Perfume", inputs: ["fragrance", "water"] },
 
   // Level 2 Goals (Intermediate)
   { level: 2, name: "Garden", inputs: ["terrarium", "plant"] },

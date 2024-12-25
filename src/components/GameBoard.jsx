@@ -10,6 +10,7 @@ import useRewards from './useRewards';
 import recipes from "../gameLogic/recipes";
 import goals from "../gameLogic/goals";
 import "./GameBoard.css";
+import GoalCompletion from "./GoalCompletion";  // Import GoalCompletion component
 
 const GameBoard = () => {
   const [lives, setLives] = useState(3);
@@ -24,11 +25,11 @@ const GameBoard = () => {
   const [discoveryCount, setDiscoveryCount] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
-  const [powerNapActive, setPowerNapActive] = useState(false); // Add this line
+  const [powerNapActive, setPowerNapActive] = useState(false); 
+  const [showGoalCompletion, setShowGoalCompletion] = useState(false);  // Goal completion state
 
   const currentGoal = goals[currentGoalIndex];
 
-  // Define loseLife before it's used in useRewards
   const loseLife = useCallback(() => {
     setLives((prevLives) => {
       const newLives = prevLives - 1;
@@ -48,7 +49,7 @@ const GameBoard = () => {
     setLives,
     setIsGameOver,
     setShowRewards,
-setPowerNapActive 
+    setPowerNapActive
   );
 
   const restartGame = () => {
@@ -112,11 +113,20 @@ setPowerNapActive
           return newCount;
         });
 
+        // Goal completion logic
         if (currentGoal && recipe.output === currentGoal.name.toLowerCase()) {
-          alert(`Goal completed: ${currentGoal.name}`);
-          setCurrentGoalIndex(prev => prev + 1);
+          setCurrentGoalIndex((prev) => prev + 1);
           setShowHint(false);
+          
+          // Trigger goal completion screen to appear
+          setShowGoalCompletion(true);
+
+          // Optionally close after a set time (3 seconds)
+          setTimeout(() => {
+            setShowGoalCompletion(false);
+          }, 75000); 
         }
+
         triggerConfetti();
       } else {
         setResult(recipe.output);
@@ -172,7 +182,7 @@ setPowerNapActive
     }
   };
 
- if (currentGoalIndex >= goals.length) {
+  if (currentGoalIndex >= goals.length) {
     return <h2>All goals completed! 🎉</h2>;
   }
 
@@ -181,7 +191,7 @@ setPowerNapActive
   }
 
   return (
-    <div>
+   <div>
       {showConfetti && <div className="confetti-container" />}
       <LivesDisplay lives={lives} />
       <FatigueDisplay 
@@ -219,6 +229,13 @@ setPowerNapActive
         showHint={showHint}
         setShowHint={setShowHint}
       />
+
+      {showGoalCompletion && (
+        <GoalCompletion 
+          goalName={currentGoal.name} // Use currentGoal.name here
+          onClose={() => setShowGoalCompletion(false)} 
+        />
+      )}
     </div>
   );
 };

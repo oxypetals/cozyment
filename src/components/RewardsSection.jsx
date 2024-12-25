@@ -75,7 +75,7 @@ const RewardsSection = ({
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'rgba(0,0,0,0.8)',
+      background: '#e1eacdcc',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -84,7 +84,7 @@ const RewardsSection = ({
       zIndex: 1000,
       padding: '2vh'
     }}>
-      <h1 style={{ color: '#fff', marginBottom: '2vh' }}>Choose Your Reward</h1>
+      <h1 style={{ color: '#1a1002', marginBottom: '2vh' }}>Choose Your Reward</h1>
       <div style={{
         display: 'grid',
         gridTemplateColumns: `repeat(3, ${containerSize.width}px)`,
