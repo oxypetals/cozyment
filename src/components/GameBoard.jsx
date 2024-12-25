@@ -213,7 +213,21 @@ setPowerNapActive
         setShowHint={setShowHint}
       />
     </div>
+
+  );
+
+return (
+    <div>
+      <FatigueDisplay 
+        elementFatigue={elementFatigue}
+        powerNapActive={powerNapActive} // Pass to component
+      />
+      
+      {/* Add discovery count display */}
+      <div className="discovery-count">
+        Discoveries: {discoveryCount}
+      </div>
+    </div>
   );
 };
-
 export default GameBoard;

@@ -26,14 +26,13 @@ const RewardsSection = ({
   const [selectedReward, setSelectedReward] = useState(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
-  useEffect(() => {
+   useEffect(() => {
     if (isVisible) {
       const updateSize = () => {
         const vw = Math.min(document.documentElement.clientWidth, window.innerWidth);
         const vh = Math.min(document.documentElement.clientHeight, window.innerHeight);
         const gapSize = Math.min(vw, vh) * 0.02;
         const availableWidth = vw * 0.9;
-        const availableHeight = vh * 0.9;
         const cardWidth = Math.floor(availableWidth / 3) - (gapSize * 2);
         const cardHeight = Math.floor(cardWidth * 1.3);
         
@@ -50,20 +49,16 @@ const RewardsSection = ({
     }
   }, [isVisible]);
 
-  useEffect(() => {
+ useEffect(() => {
     if (isVisible && !selectedCards.length) {
-      // Filter out 'sleep' from available cards if it exists
       const otherCards = availableCards.filter(card => card !== 'sleep');
-      
-      // Randomly select 2 cards from remaining cards
       const shuffled = [...otherCards]
         .sort(() => Math.random() - 0.5)
         .slice(0, 2);
-      
-      // Add 'sleep' card to the selection
       setSelectedCards(['sleep', ...shuffled]);
     }
-  }, [isVisible, availableCards]);
+  }, [isVisible, availableCards, selectedCards.length]);
+
 
   const handleCardClick = (cardType) => {
     setSelectedReward(cardType);
