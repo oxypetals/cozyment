@@ -63,3 +63,14 @@ cursor: pointer;
  animation: fadeIn 1s ease-out; /* Apply the animation */
 
 }
+
+/* Hide .hint-button on mobile devices */
+@media (max-width: 768px) {
+  .hint-button {
+    display: none;
+  }
+.goal {
+    top: 25px;
+}
+
+}
