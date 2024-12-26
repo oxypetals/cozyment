@@ -1,3 +1,5 @@
+// RewardsSection.jsx
+
 import React, { useState, useEffect } from 'react';
 import RewardCard from './RewardCard';
 
@@ -19,16 +21,30 @@ const ALL_REWARD_CARDS = [
 // Fatigue-related cards
 const FATIGUE_CARDS = ['powernap', 'smallnap', 'fortify'];
 
+/**
+ * RewardsSection Component
+ *
+ * Displays a selection of reward cards to the user.
+ *
+ * @param {Object} props - Component props.
+ * @param {boolean} props.isVisible - Determines if the rewards section is visible.
+ * @param {Function} props.onRewardSelect - Callback when a reward is selected.
+ * @param {Function} props.onClose - Callback to close the rewards section.
+ * @param {number} props.currentGoalLevel - The current goal's level to determine card availability.
+ * @param {Array} props.availableCards - (Optional) Array of available reward cards.
+ *
+ * @returns {JSX.Element|null} - The rewards section UI or null if not visible.
+ */
 const RewardsSection = ({
   isVisible,
   onRewardSelect,
   onClose,
-  currentGoalLevel, // Add this prop to get the current goal level
+  currentGoalLevel, // Now receiving currentGoalLevel as a prop
   availableCards = ALL_REWARD_CARDS  // Use the full pool as default
 }) => {
   const [selectedCards, setSelectedCards] = useState([]);
   const [selectedReward, setSelectedReward] = useState(null);
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0, gap: 0 });
 
   useEffect(() => {
     if (isVisible) {
@@ -54,11 +70,16 @@ const RewardsSection = ({
   }, [isVisible]);
 
   useEffect(() => {
-    if (isVisible && !selectedCards.length) {
+    if (isVisible && selectedCards.length === 0) {
       // Filter out fatigue-related cards if the goal level is less than 3
       let filteredCards = availableCards.filter(card =>
         currentGoalLevel < 3 ? !FATIGUE_CARDS.includes(card) : true
       );
+
+      if (filteredCards.length < 3) {
+        // If not enough cards after filtering, allow fatigue cards
+        filteredCards = availableCards;
+      }
 
       const shuffled = [...filteredCards]
         .sort(() => Math.random() - 0.5)

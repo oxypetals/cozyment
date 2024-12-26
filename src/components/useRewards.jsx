@@ -3,6 +3,21 @@
 import { useState, useCallback } from "react";
 import { allUniqueElements } from '../gameLogic/elementlist';
 
+/**
+ * Custom hook to manage game rewards, including triggering animations and updating game state.
+ *
+ * @param {Array} inventory - Current inventory of elements.
+ * @param {Function} setInventory - Setter function to update the inventory.
+ * @param {Function} setElementFatigue - Setter function to update element fatigue.
+ * @param {Function} loseLife - Function to handle losing a life.
+ * @param {number} lives - Current number of lives.
+ * @param {Function} setLives - Setter function to update lives.
+ * @param {Function} setIsGameOver - Setter function to set the game over state.
+ * @param {Function} setShowRewards - Setter function to show/hide rewards UI.
+ * @param {Function} setPowerNapActive - Setter function to activate power nap.
+ *
+ * @returns {Object} - Contains handlers and state for rewards.
+ */
 const useRewards = (
   inventory,
   setInventory,
@@ -17,15 +32,28 @@ const useRewards = (
   const [showElementAnimation, setShowElementAnimation] = useState(false);
   const [animationElements, setAnimationElements] = useState([]);
 
-  // Callback to handle the result from the jackpot animation
+  /**
+   * Handles the result from the animation by adding the selected element to inventory
+   * and hiding the animation overlay.
+   *
+   * @param {string|null} resultElement - The element selected from the animation.
+   */
   const handleAnimationResult = useCallback((resultElement) => {
     console.log("Animation Result:", resultElement); // Debugging
     if (resultElement) {
       setInventory(prev => [...prev, resultElement]);
     }
     setShowElementAnimation(false); // Hide the animation after result
-  }, [setInventory, setShowElementAnimation]);
+  }, [
+    // setInventory and setShowElementAnimation are stable and do not need to be included
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  ]);
 
+  /**
+   * Handles different types of rewards based on the reward type.
+   *
+   * @param {string} rewardType - The type of reward to handle.
+   */
   const handleReward = useCallback((rewardType) => {
     console.log("Handling Reward:", rewardType); // Debugging
     switch (rewardType) {
@@ -34,7 +62,7 @@ const useRewards = (
           const newLives = lives - 3;
           setLives(newLives);
           if (newLives <= 0) {
-            setIsGameOver(true);
+            setTimeout(() => setIsGameOver(true), 0);
           }
         } else {
           alert("Not enough lives for Stabilize! You need 3 or fewer lives.");
@@ -47,7 +75,7 @@ const useRewards = (
 
       case 'discover':
         setShowElementAnimation(true);
-        setAnimationElements([...allUniqueElements]); // Spread to create a new array reference
+        setAnimationElements([...allUniqueElements]); // Trigger animation for all elements
         break;
 
       case 'sleep':
@@ -76,7 +104,7 @@ const useRewards = (
           const newElements = allUniqueElements.filter(elem => !inventory.includes(elem));
           if (newElements.length > 0) {
             setShowElementAnimation(true);
-            setAnimationElements([...newElements]); // Spread to create a new array reference
+            setAnimationElements([...newElements]); // Trigger animation with new elements
           } else {
             alert("No new elements to discover!");
           }
@@ -114,14 +142,12 @@ const useRewards = (
     }
     setShowRewards(false); // Hide rewards UI after handling
   }, [
-    lives, // 'lives' is a state variable that can change
-    inventory, // 'inventory' is a state variable that can change
-    setLives,
-    setIsGameOver,
-    setShowElementAnimation,
-    setShowRewards,
-    setElementFatigue,
-    setPowerNapActive
+    // Dependencies:
+    inventory,
+    lives,
+    // setInventory, setLives, setIsGameOver, setShowRewards, setElementFatigue, setPowerNapActive
+    // are stable and do not need to be included
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   ]);
 
   return { handleReward, setShowRewards, showElementAnimation, animationElements, handleAnimationResult };

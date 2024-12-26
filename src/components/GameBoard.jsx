@@ -1,3 +1,5 @@
+// GameBoard.jsx
+
 import React, { useState, useEffect, useCallback } from "react";
 import ElementList from "./ElementList";
 import LivesDisplay from "./LivesDisplay";
@@ -147,7 +149,16 @@ const GameBoard = () => {
     }
 
     setSelectedElements([]);
-  }, [selectedElements, inventory, currentGoal, loseLife, triggerConfetti, canUseElement, updateElementFatigue, showRewards]);
+  }, [
+    selectedElements, 
+    inventory, 
+    currentGoal, 
+    loseLife, 
+    triggerConfetti, 
+    canUseElement, 
+    updateElementFatigue, 
+    showRewards
+  ]);
 
   useEffect(() => {
     const loadElementImages = async () => {
@@ -250,6 +261,7 @@ const GameBoard = () => {
           isVisible={showRewards} 
           onRewardSelect={handleReward} 
           onClose={() => setShowRewards(false)}
+          currentGoalLevel={currentGoal.level} // Passing currentGoalLevel prop
         />
       )}
 
