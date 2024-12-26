@@ -120,7 +120,7 @@ const useRewards = (
 
       case 'drinkingpond':
         if (lives >= 2) {
-          setLives(prev => prev + 1);
+          setLives(prev => prev + 2);
         } else {
           alert("You need at least 2 lives to use Drinking Pond!");
         }

@@ -7,7 +7,6 @@ const CombinationArea = ({ selectedElements, elementImages, result }) => {
       border: "none",
       padding: "10px",
       textAlign: "center",
-      margin: "20px 0",
     }}>
       <h3>Selected Elements:</h3>
       <div className="selected-elements">
@@ -41,7 +40,7 @@ const CombinationArea = ({ selectedElements, elementImages, result }) => {
             ) : (
               <div className="placeholder-image" style={{ width: "150px", height: "150px" }}></div>
             )}
-            <p>{result}</p>
+            <p className="result">{result}</p>
           </div>
         </div>
       )}

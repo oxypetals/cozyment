@@ -31,7 +31,7 @@ const RewardCard = ({ type, onClick, isSelected, lives }) => {
       case 'hydrate':
         return {
           title: 'Drink',
-          description: 'Gain one additional life',
+          description: 'Just a small sip, gain one additional life',
           image: '/assets/hydrate.png'
         };
       case 'hydrateultra':
@@ -61,20 +61,20 @@ const RewardCard = ({ type, onClick, isSelected, lives }) => {
       case 'blessingfl':
         return {
           title: 'Blessing of the Flowers',
-          description: 'Gain three lives if you have discovered the flower',
+          description: 'If you have discovered the flower you will get three more lives',
           image: '/assets/blessingfl.png'
         };
       case 'secretfountain':
         return {
           title: 'Secret Fountain',
-          description: lives >= 3 ? 'Gain 3 extra lives' : 'You need at least 3 lives to use this card',
+          description: lives >= 3 ? 'Gain 3 extra lives' : 'If you have three lives you will get three more!',
           image: '/assets/secretfountain.png',
           disabled: lives < 3
         };
       case 'drinkingpond':
         return {
           title: 'Drinking Pond',
-          description: lives >= 2 ? 'Gain 1 extra life' : 'You need at least 2 lives to use this card',
+          description: lives >= 2 ? 'Gain 1 extra life' : 'If you have at least two lives you will get two more',
           image: '/assets/drinkingpond.png',
           disabled: lives < 2
         };

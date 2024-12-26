@@ -183,6 +183,15 @@ const GameBoard = () => {
     loadElementImages();
   }, [inventory]);
 
+
+useEffect(() => {
+    // Automatically complete the goal if its required output is already in the inventory
+    if (currentGoal && inventory.includes(currentGoal.name.toLowerCase())) {
+        setCurrentGoalIndex((prev) => prev + 1);
+    }
+}, [inventory, currentGoal]);
+
+
   useEffect(() => {
     if (selectedElements.length === 2) {
       const timer = setTimeout(combineElements, 500);
@@ -202,6 +211,7 @@ const GameBoard = () => {
       setSelectedElements(prev => [...prev, element]);
     }
   };
+
 
   // Debugging: Log when inventory updates
   useEffect(() => {
