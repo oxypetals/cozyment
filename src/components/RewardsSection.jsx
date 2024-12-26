@@ -16,17 +16,21 @@ const ALL_REWARD_CARDS = [
   'blessingfl'
 ];
 
-const RewardsSection = ({ 
-  isVisible, 
-  onRewardSelect, 
+// Fatigue-related cards
+const FATIGUE_CARDS = ['powernap', 'smallnap', 'fortify'];
+
+const RewardsSection = ({
+  isVisible,
+  onRewardSelect,
   onClose,
+  currentGoalLevel, // Add this prop to get the current goal level
   availableCards = ALL_REWARD_CARDS  // Use the full pool as default
 }) => {
   const [selectedCards, setSelectedCards] = useState([]);
   const [selectedReward, setSelectedReward] = useState(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
-   useEffect(() => {
+  useEffect(() => {
     if (isVisible) {
       const updateSize = () => {
         const vw = Math.min(document.documentElement.clientWidth, window.innerWidth);
@@ -49,16 +53,19 @@ const RewardsSection = ({
     }
   }, [isVisible]);
 
- useEffect(() => {
+  useEffect(() => {
     if (isVisible && !selectedCards.length) {
-      const otherCards = availableCards.filter(card => card !== 'sleep');
-      const shuffled = [...otherCards]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 2);
-      setSelectedCards(['sleep', ...shuffled]);
-    }
-  }, [isVisible, availableCards, selectedCards.length]);
+      // Filter out fatigue-related cards if the goal level is less than 3
+      let filteredCards = availableCards.filter(card =>
+        currentGoalLevel < 3 ? !FATIGUE_CARDS.includes(card) : true
+      );
 
+      const shuffled = [...filteredCards]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3); // Select three random cards
+      setSelectedCards(shuffled);
+    }
+  }, [isVisible, availableCards, currentGoalLevel, selectedCards.length]);
 
   const handleCardClick = (cardType) => {
     setSelectedReward(cardType);

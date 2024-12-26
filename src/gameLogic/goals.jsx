@@ -1,5 +1,5 @@
 const goals = [
-  // Level 1 Goals (Easiest)
+  // Level 1 Goals (Natural)
   { level: 1, name: "Rain", inputs: ["water", "rain"] },
   { level: 1, name: "Flower", inputs: ["rain", "plant"] },
   { level: 1, name: "Tree", inputs: ["plant", "water"] },
@@ -9,7 +9,7 @@ const goals = [
   { level: 1, name: "Lightning", inputs: ["thunderstorm", "fire"] },
   { level: 1, name: "Perfume", inputs: ["fragrance", "water"] },
 
-  // Level 2 Goals (Intermediate)
+  // Level 2 Goals (Cooking)
   { level: 2, name: "Garden", inputs: ["terrarium", "plant"] },
   { level: 2, name: "Forest", inputs: ["greenhouse", "plant"] },
   { level: 2, name: "Greenhouse", inputs: ["factory", "glass"] },

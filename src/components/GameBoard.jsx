@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import ElementList from "./ElementList";
 import LivesDisplay from "./LivesDisplay";
 import RewardsSection from './RewardsSection';
-import FatigueDisplay from './FatigueDisplay';
 import CombinationArea from './CombinationArea';
 import GoalsSection from './GoalsSection';
 import GameOver from './GameOver';
@@ -11,6 +10,8 @@ import recipes from "../gameLogic/recipes";
 import goals from "../gameLogic/goals";
 import "./GameBoard.css";
 import GoalCompletion from "./GoalCompletion";  // Import GoalCompletion component
+import ElementFatigue from './ElementFatigue';  // Import the new ElementFatigue component
+import ElementScrollAnimation from './ElementScrollAnimation'; // Import the animation component
 
 const GameBoard = () => {
   const [lives, setLives] = useState(3);
@@ -40,7 +41,13 @@ const GameBoard = () => {
     });
   }, []);
 
-  const { handleReward } = useRewards(
+  // Destructure all necessary values from useRewards
+  const { 
+    handleReward, 
+    showElementAnimation, 
+    animationElements, 
+    handleAnimationResult 
+  } = useRewards(
     inventory,
     setInventory,
     setElementFatigue,
@@ -71,6 +78,7 @@ const GameBoard = () => {
   }, []);
 
   const updateElementFatigue = useCallback((elements) => {
+    if (currentGoal.level < 3) return; // Do not update fatigue if the level is below 3
     setElementFatigue(prev => {
       const updated = { ...prev };
       elements.forEach(element => {
@@ -78,11 +86,13 @@ const GameBoard = () => {
       });
       return updated;
     });
-  }, []);
+  }, [currentGoal]);
 
   const canUseElement = useCallback((element) => {
+    // Only apply fatigue rules if the current goal's level is 3 or higher
+    if (currentGoal.level < 3) return true;
     return !elementFatigue[element] || elementFatigue[element] < 2;
-  }, [elementFatigue]);
+  }, [elementFatigue, currentGoal]);
 
   const combineElements = useCallback(() => {
     const [element1, element2] = selectedElements;
@@ -121,7 +131,7 @@ const GameBoard = () => {
           // Trigger goal completion screen to appear
           setShowGoalCompletion(true);
 
-          // Optionally close after a set time (3 seconds)
+          // Optionally close after a set time (6.9 seconds)
           setTimeout(() => {
             setShowGoalCompletion(false);
           }, 6900); 
@@ -194,10 +204,14 @@ const GameBoard = () => {
    <div>
       {showConfetti && <div className="confetti-container" />}
       <LivesDisplay lives={lives} />
-      <FatigueDisplay 
-        elementFatigue={elementFatigue}
-        powerNapActive={powerNapActive}
-      />
+      
+      {/* Conditionally show ElementFatigue only if current goal level is above 2 */}
+      {currentGoal.level > 2 && (
+        <ElementFatigue 
+          elementFatigue={elementFatigue}
+          powerNapActive={powerNapActive}
+        />
+      )}
       
       <div className="discovery-count">
         Discoveries: {discoveryCount}
@@ -234,6 +248,14 @@ const GameBoard = () => {
         <GoalCompletion 
           goalName={currentGoal.name} // Use currentGoal.name here
           onClose={() => setShowGoalCompletion(false)} 
+        />
+      )}
+
+      {/* Conditionally render the ElementScrollAnimation */}
+      {showElementAnimation && (
+        <ElementScrollAnimation
+          elements={animationElements}
+          onResult={handleAnimationResult}
         />
       )}
     </div>

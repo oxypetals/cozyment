@@ -13,7 +13,7 @@ const recipes = [
   { inputs: ["earth", "air"], output: "dust" },
   { inputs: ["steam", "air"], output: "cloud" },
   { inputs: ["lava", "water"], output: "stone" },
-  { inputs: ["lava", "air"], output: "obsidian" },
+  { inputs: ["lava", "air"], output: "obsi	dian" },
   { inputs: ["mud", "water"], output: "clay" },
   { inputs: ["clay", "fire"], output: "brick" },
   { inputs: ["rain", "earth"], output: "plant" },
