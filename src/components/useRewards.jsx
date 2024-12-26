@@ -1,3 +1,5 @@
+// useRewards.jsx
+
 import { useState, useCallback } from "react";
 import { allUniqueElements } from '../gameLogic/elementlist';
 
@@ -18,9 +20,11 @@ const useRewards = (
   // Callback to handle the result from the jackpot animation
   const handleAnimationResult = useCallback((resultElement) => {
     console.log("Animation Result:", resultElement); // Debugging
-    setInventory(prev => [...prev, resultElement]);
+    if (resultElement) {
+      setInventory(prev => [...prev, resultElement]);
+    }
     setShowElementAnimation(false); // Hide the animation after result
-  }, [setInventory]);
+  }, [setInventory, setShowElementAnimation]);
 
   const handleReward = useCallback((rewardType) => {
     console.log("Handling Reward:", rewardType); // Debugging
@@ -30,7 +34,7 @@ const useRewards = (
           const newLives = lives - 3;
           setLives(newLives);
           if (newLives <= 0) {
-            setTimeout(() => setIsGameOver(true), 0);
+            setIsGameOver(true);
           }
         } else {
           alert("Not enough lives for Stabilize! You need 3 or fewer lives.");
@@ -43,7 +47,7 @@ const useRewards = (
 
       case 'discover':
         setShowElementAnimation(true);
-        setAnimationElements(allUniqueElements); // Trigger animation for all elements
+        setAnimationElements([...allUniqueElements]); // Spread to create a new array reference
         break;
 
       case 'sleep':
@@ -55,9 +59,11 @@ const useRewards = (
         break;
 
       case 'smallnap':
+        // Implement logic if needed
         break;
 
       case 'fortify':
+        // Implement logic if needed
         break;
 
       case 'hydrateultra':
@@ -70,7 +76,7 @@ const useRewards = (
           const newElements = allUniqueElements.filter(elem => !inventory.includes(elem));
           if (newElements.length > 0) {
             setShowElementAnimation(true);
-            setAnimationElements(newElements); // Trigger animation with new elements
+            setAnimationElements([...newElements]); // Spread to create a new array reference
           } else {
             alert("No new elements to discover!");
           }
@@ -108,16 +114,14 @@ const useRewards = (
     }
     setShowRewards(false); // Hide rewards UI after handling
   }, [
-    inventory,
-    setInventory,
-    setElementFatigue,
+    lives, // 'lives' is a state variable that can change
+    inventory, // 'inventory' is a state variable that can change
     setLives,
-    lives,
     setIsGameOver,
-    setShowRewards,
-    setPowerNapActive,
     setShowElementAnimation,
-    setAnimationElements
+    setShowRewards,
+    setElementFatigue,
+    setPowerNapActive
   ]);
 
   return { handleReward, setShowRewards, showElementAnimation, animationElements, handleAnimationResult };

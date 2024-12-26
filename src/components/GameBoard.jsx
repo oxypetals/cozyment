@@ -192,6 +192,21 @@ const GameBoard = () => {
     }
   };
 
+  // Debugging: Log when inventory updates
+  useEffect(() => {
+    console.log("Inventory Updated:", inventory);
+  }, [inventory]);
+
+  // Debugging: Log when lives update
+  useEffect(() => {
+    console.log("Lives Updated:", lives);
+  }, [lives]);
+
+  // Debugging: Log when discovery count updates
+  useEffect(() => {
+    console.log("Discovery Count:", discoveryCount);
+  }, [discoveryCount]);
+
   if (currentGoalIndex >= goals.length) {
     return <h2>All goals completed! 🎉</h2>;
   }
@@ -201,7 +216,7 @@ const GameBoard = () => {
   }
 
   return (
-   <div>
+    <div>
       {showConfetti && <div className="confetti-container" />}
       <LivesDisplay lives={lives} />
       
